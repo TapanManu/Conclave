@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Conclave</string>
+    <string name="todo">TODO</string>
+    <string name="your_message_here">Your message here</string>
+</resources>
