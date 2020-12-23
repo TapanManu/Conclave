@@ -17,55 +17,63 @@
         android:background="#FBEFE0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
+        <LinearLayout
+            android:id="@+id/chatArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
     </ScrollView>
 
-    <EditText
-        android:id="@+id/message"
-        android:layout_width="250dp"
-        android:layout_height="0dp"
-        android:autofillHints=""
-        android:background="#FFFFFF"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="@string/your_message_here"
-        android:inputType="textMultiLine"
-        android:textColor="#5B636A"
-        android:textColorHighlight="#D1F0F4"
-        android:textColorHint="#FFFFFF"
-        android:textColorLink="#C5EDF3"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/delete"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="@string/your_message_here" />
-
-    <ImageButton
-        android:id="@+id/Send"
-        android:layout_width="43dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="2dp"
-        android:background="@drawable/sendbutton"
-        android:contentDescription="@string/todo"
-        android:visibility="visible"
+    <LinearLayout
+        android:id="@+id/chatbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/message"
-        app:srcCompat="@android:drawable/ic_menu_send" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageButton
-        android:id="@+id/delete"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#F8F5F5"
-        android:contentDescription="TODO"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView"
-        app:layout_constraintVertical_bias="0.111"
-        app:srcCompat="@android:drawable/ic_menu_delete" />
+        <ImageButton
+            android:id="@+id/delete"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:background="#F8F5F5"
+            android:contentDescription="TODO"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
+
+        <EditText
+            android:id="@+id/message"
+            android:layout_width="305dp"
+            android:layout_height="match_parent"
+            android:autofillHints=""
+            android:background="#FFFFFF"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="@string/your_message_here"
+            android:inputType="textMultiLine"
+            android:textColor="#5B636A"
+            android:textColorHighlight="#D1F0F4"
+            android:textColorHint="#FFFFFF"
+            android:textColorLink="#C5EDF3"
+            tools:text="@string/your_message_here" />
+
+        <ImageButton
+            android:id="@+id/Send"
+            android:layout_width="47dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/sendbutton"
+            android:contentDescription="@string/todo"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_send" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

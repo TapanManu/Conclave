@@ -8,13 +8,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     EditText message;
     ImageButton send,delete;
     String txt;
+    LinearLayout chatArea;
     final String DEFAULT = "Your message here";
+    int u=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
         message = findViewById(R.id.message);
         message.setText(DEFAULT);
         delete = findViewById(R.id.delete);
+        chatArea = findViewById(R.id.chatArea);
+        chatArea.setPadding(10,5,10,5);
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
                     message.setText(DEFAULT);
                 }
                 else {
-                    message.setText("message:" + txt);
+                    u = (u + 1)%2;
+                    new MessageView(getApplicationContext(),u,txt,chatArea);
+                    //message.setText("message:" + txt);
                 }
             }
         });
