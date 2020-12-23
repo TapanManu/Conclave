@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
         chatArea.setPadding(10,5,10,5);
 
         getSupportActionBar().setTitle("Anonymous user");
-        getSupportActionBar().setIcon(R.drawable.ic_launcher_foreground);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_action_name);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
