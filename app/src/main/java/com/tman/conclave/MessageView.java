@@ -11,16 +11,19 @@ import android.widget.TextView;
 
 import com.tman.conclave.R;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class MessageView {
 
-    TextView sendmessage,recievemessage;
+    TextView sendmessage,recievemessage,datetime;
 
 
 
     MessageView(Context context, int user,String message,LinearLayout chatArea){
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        if(user==1) {
+        if(user==1) {               //current dummy user
             sendmessage = new TextView(context);
             sendmessage.setPadding(30,10,30,10);
             sendmessage.setText(message);
@@ -32,7 +35,7 @@ public class MessageView {
             sendmessage.setBackgroundResource(R.drawable.user_message);
             chatArea.addView(sendmessage);
         }
-        else if(user==0){
+        else if(user==0){       //anonymous user
             recievemessage = new TextView(context);
             recievemessage.setText(message);
             recievemessage.setPadding(30,10,30,10);
@@ -43,6 +46,19 @@ public class MessageView {
             recievemessage.setBackgroundResource(R.drawable.ext_message);
             chatArea.addView(recievemessage);
         }
+
+        //time display
+        Date time = Calendar.getInstance().getTime();
+        String times = time.toString().split(" ")[3];
+        datetime = new TextView(context);
+        datetime.setText(times);
+        datetime.setTextColor(Color.WHITE);
+        datetime.setLayoutParams(lp);
+        datetime.setPadding(30,10,30,10);
+        datetime.setBackgroundColor(Color.parseColor("#cccccc"));
+
+        chatArea.addView(datetime);
+
     }
 
 
