@@ -1,79 +1,51 @@
 package com.tman.conclave;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
+
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
 
-    EditText message;
-    ImageButton send,delete;
-    String txt;
-    LinearLayout chatArea;
-    final String DEFAULT = "Your message here";
-    int u=0;
+public class MainActivity extends AppCompatActivity implements MessageAdapter.ItemClicked {
+    RecyclerView recyclerView;
+    RecyclerView.Adapter myAdapter;
+    RecyclerView.LayoutManager layoutManager;
+    View customView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        recyclerView = findViewById(R.id.list);
+        recyclerView.setHasFixedSize(true);
 
-        send = findViewById(R.id.Send);
-        message = findViewById(R.id.message);
-        message.setText(DEFAULT);
-        delete = findViewById(R.id.delete);
-        chatArea = findViewById(R.id.chatArea);
-        chatArea.setPadding(10,5,10,5);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
 
-        getSupportActionBar().setTitle("Anonymous user");
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.ic_action_name);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        myAdapter = new MessageAdapter(this,MessageList.messages);
+        recyclerView.setAdapter(myAdapter);
 
 
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                txt = message.getText().toString().trim();
-                Log.d("emsg",txt);
-                if(txt.equals("") || txt.equals(DEFAULT)){
-                    Toast.makeText(getApplicationContext(),"Enter some text",Toast.LENGTH_SHORT).show();
-                    message.setText(DEFAULT);
-                }
-                else {
-                    u = (u + 1)%2;
-                    new MessageView(getApplicationContext(),u,txt,chatArea);
-                    message.setText("");
-                }
-            }
-        });
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                message.setText("");
-            }
-        });
+
     }
+
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        txt = message.getText().toString();
+    public void onItemClicked(int index) {
+        Messages m = MessageList.messages.get(index);
+        Intent intent = new Intent(MainActivity.this,ChatActivity.class);
+        intent.putExtra("name",m.getName());
+        MainActivity.this.startActivity(intent);
+        //put extras to intent based on the index selected
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
+    public void notifyDataChanged(){
+        myAdapter.notifyDataSetChanged();
     }
+
 }

@@ -2,4 +2,7 @@
     <string name="app_name">Conclave</string>
     <string name="todo">TODO</string>
     <string name="your_message_here">Your message here</string>
+    <string name="title_activity_home">Home</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 </resources>
