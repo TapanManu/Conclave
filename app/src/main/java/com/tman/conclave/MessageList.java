@@ -11,8 +11,12 @@ public class MessageList extends Application {
     public void onCreate() {
         super.onCreate();
         messages = new ArrayList<Messages>();
-        messages.add(new Messages("User 1"));
-        messages.add(new Messages("User 2"));
-
+        try {
+            messages.add(new Messages("User 1"));
+            messages.add(new Messages("User 2"));
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }

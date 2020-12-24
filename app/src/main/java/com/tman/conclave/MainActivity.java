@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 
 import android.view.View;
@@ -37,9 +38,11 @@ public class MainActivity extends AppCompatActivity implements MessageAdapter.It
 
     @Override
     public void onItemClicked(int index) {
+
         Messages m = MessageList.messages.get(index);
         Intent intent = new Intent(MainActivity.this,ChatActivity.class);
         intent.putExtra("name",m.getName());
+
         MainActivity.this.startActivity(intent);
         //put extras to intent based on the index selected
     }

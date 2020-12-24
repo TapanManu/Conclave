@@ -1,6 +1,8 @@
 package com.tman.conclave;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
@@ -43,7 +47,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
         holder.itemView.setTag(messages.get(position));
         holder.nameview.setText(messages.get(position).getName());
-        //holder.prof.setImageResource(messages.get(position).getURL());
+        URL url = messages.get(position).getURL();
+        final Bitmap[] bmp = new Bitmap[1];
+
+        Thread t = new Thread() {               //passing network operations on another thread
+            public void run() {
+                try {
+                    bmp[0] = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        t.start();
+        holder.prof.setImageBitmap(bmp[0]);
 
     }
 
@@ -61,6 +78,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameview = itemView.findViewById(R.id.tvName);
+            prof = itemView.findViewById(R.id.ivProf);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
