@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "18974395361",
+    "project_id": "conclave-735f2",
+    "storage_bucket": "conclave-735f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:18974395361:android:c3f5e72888309ceb7920a0",
+        "android_client_info": {
+          "package_name": "com.tman.conclave"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "18974395361-fhe7jfnnnv0d6f6k3o9psje1mli4bpn0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyb6k_4l6PLQWJHiw2TTtIDw4Fnkl_e8I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "18974395361-fhe7jfnnnv0d6f6k3o9psje1mli4bpn0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

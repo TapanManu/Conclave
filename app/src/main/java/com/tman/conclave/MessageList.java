@@ -12,8 +12,8 @@ public class MessageList extends Application {
         super.onCreate();
         messages = new ArrayList<Messages>();
         try {
-            messages.add(new Messages("User 1"));
-            messages.add(new Messages("User 2"));
+            messages.add(new Messages("User 1","user1@gmail.com"));
+            messages.add(new Messages("User 2","user2@gmail.com"));
         }
         catch(Exception e){
             e.printStackTrace();

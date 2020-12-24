@@ -13,6 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class ChatActivity extends AppCompatActivity {
 
     EditText message;
@@ -56,8 +59,18 @@ public class ChatActivity extends AppCompatActivity {
                     message.setText(DEFAULT);
                 }
                 else {
-                    u = (u + 1)%2;
-                    new MessageView(getApplicationContext(),u,txt,chatArea);
+                    /*
+                    FirebaseDatabase.getInstance()
+                            .getReference()
+                            .push()
+                            .setValue(new MessageView(getApplicationContext(),FirebaseAuth.getInstance()
+                            .getCurrentUser()
+                            .getDisplayName(),txt,chatArea));
+
+                     */
+                    new MessageView(getApplicationContext(),FirebaseAuth.getInstance()
+                            .getCurrentUser()
+                            .getDisplayName(),txt,chatArea);
                     message.setText("");
                     scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
 

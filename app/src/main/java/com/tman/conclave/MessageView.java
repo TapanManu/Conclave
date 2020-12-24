@@ -2,6 +2,7 @@ package com.tman.conclave;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.tman.conclave.R;
 
 import java.util.Calendar;
@@ -20,10 +22,12 @@ public class MessageView {
 
 
 
-    MessageView(Context context, int user,String message,LinearLayout chatArea){
+    MessageView(Context context, String username,String message,LinearLayout chatArea){
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        String currentuser= FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-        if(user==1) {               //current dummy user
+        if(username.equals(currentuser)) {               //current user
+            Log.d("success","hi");
             sendmessage = new TextView(context);
             sendmessage.setPadding(30,10,30,10);
             sendmessage.setText(message);
@@ -35,7 +39,7 @@ public class MessageView {
             sendmessage.setBackgroundResource(R.drawable.user_message);
             chatArea.addView(sendmessage);
         }
-        else if(user==0){       //anonymous user
+        else{       //anonymous user
             recievemessage = new TextView(context);
             recievemessage.setText(message);
             recievemessage.setPadding(30,10,30,10);
@@ -60,6 +64,8 @@ public class MessageView {
         chatArea.addView(datetime);
 
     }
+
+
 
 
 
