@@ -10,7 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Conclave"
         android:name=".MessageList" >
-        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".ChatActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tman.conclave.MainActivity" />
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
