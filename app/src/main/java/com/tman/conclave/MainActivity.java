@@ -224,7 +224,17 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        changeStatus("online");
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        changeStatus("offline");
+    }
 
     @Override
     public void onItemClicked(int index) {

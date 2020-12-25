@@ -59,16 +59,9 @@ public class ChatActivity extends AppCompatActivity {
                     message.setText(DEFAULT);
                 }
                 else {
-                    //There must be a list display of previous chat messages stored filtered by user
-                    /*
-                    FirebaseDatabase.getInstance()
-                            .getReference()
-                            .push()
-                            .setValue(new MessageView(getApplicationContext(),FirebaseAuth.getInstance()
-                            .getCurrentUser()
-                            .getDisplayName(),txt,chatArea));
 
-                     */
+                     //create firebase database for storing chats
+                    //refer Message.java to get an idea
                     new MessageView(getApplicationContext(),FirebaseAuth.getInstance()
                             .getCurrentUser()
                             .getDisplayName(),txt,chatArea);
