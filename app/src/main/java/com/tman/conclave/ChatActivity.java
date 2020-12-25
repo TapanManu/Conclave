@@ -59,6 +59,7 @@ public class ChatActivity extends AppCompatActivity {
                     message.setText(DEFAULT);
                 }
                 else {
+                    //There must be a list display of previous chat messages stored filtered by user
                     /*
                     FirebaseDatabase.getInstance()
                             .getReference()

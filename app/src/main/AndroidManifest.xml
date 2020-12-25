@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Conclave"
-        android:name=".MessageList" >
+         >
         <activity android:name=".ChatActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

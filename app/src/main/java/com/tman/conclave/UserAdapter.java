@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private ArrayList<User> users;
     ItemClicked activity;
@@ -27,7 +27,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         void onItemClicked(int index);
     }
 
-    public MessageAdapter(Context context, ArrayList<User> list){
+    public UserAdapter(Context context, ArrayList<User> list){
         this.users = list;
         if(users==null){
             Log.d("error","hi");
@@ -37,16 +37,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @NonNull
     @Override
-    public MessageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public UserAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.messagelayout,viewGroup,false);
 
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UserAdapter.ViewHolder holder, int position) {
         holder.itemView.setTag(users.get(position));
+       // Log.d("namesview",users.get(position).getName());
         holder.nameview.setText(users.get(position).getName());
+        holder.prof.setImageResource(R.drawable.ic_launcher_foreground);
         /*URL url = users.get(position).getURL();
         final Bitmap[] bmp = new Bitmap[1];
 
@@ -60,14 +62,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
         };
         t.start();
-        holder.prof.setImageBitmap(bmp[0]);
+
         */
     }
 
     @Override
     public int getItemCount() {
-
-
         return users.size();
     }
 
