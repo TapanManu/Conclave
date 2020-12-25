@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
                         "Successfully signed in. Welcome!",
                         Toast.LENGTH_LONG)
                         .show();
+                changeStatus("online");
                 displayChatusers();
             } else {
                 Toast.makeText(this,
@@ -214,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
                                     "You have been signed out.",
                                     Toast.LENGTH_LONG)
                                     .show();
-
+                            changeStatus("offline");
                             // Close activity
                             finish();
                         }
@@ -231,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
         User m = users.get(index);
         Intent intent = new Intent(MainActivity.this,ChatActivity.class);
         intent.putExtra("name",m.getName());
+
 
         //get the name and email id of other user to display the users and scrutinize based on that
         //create two variables current user identified by firebase.AuthUI.getcurrentuser()
@@ -254,43 +256,15 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
         myAdapter.notifyDataSetChanged();
     }
 
+    private void changeStatus(String status){
+        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        reference.updateChildren(hashMap);
+    }
 
 
-   /* public void listView(){
-        users = new ArrayList<User>();
-        String currentuser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        Log.d("user","logged in");
-
-        ValueEventListener eventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String name = ds.child("name").getValue(String.class);
-                    String email = ds.child("email").getValue(String.class);
-                    String key = ds.getKey();
-                    Log.d("key",key);
-                    Log.d("name:",name);
-                    Log.d("email",email);
-                    //if(!currentuser.equals(email)) {
-                        try {
-                            users.add(new User(name, email));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                   // }
-                }
-                //Log.d("TAGGG",String.valueOf(users.size()));
-                displayChatusers();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("errordb:","db connection error");
-
-            }
-
-        };
-        myRef.addListenerForSingleValueEvent(eventListener);
-    }*/
     }

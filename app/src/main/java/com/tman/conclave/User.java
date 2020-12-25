@@ -38,4 +38,10 @@ public class User {
         return email;
     }
 
+    public String getStatus() { return status; }
+
+    void setStatus(String value){
+        status = value;
+    }
+
 }
