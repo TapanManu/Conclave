@@ -1,8 +1,12 @@
 package com.tman.conclave;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,8 +17,21 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -22,17 +39,111 @@ public class ChatActivity extends AppCompatActivity {
     ImageButton send,delete;
     ScrollView scrollView;
     String txt;
-    LinearLayout chatArea;
+    RecyclerView chatArea;
     final String DEFAULT = "Your message here";
-    int u=0;
+    final FirebaseUser firebaseuser = FirebaseAuth.getInstance().getCurrentUser();
+    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
+
+    RecyclerView recyclerView;
+    RecyclerView.Adapter myAdapter;
+    RecyclerView.LayoutManager layoutManager;
+    public static ArrayList<Message> messages = new ArrayList<>();
+
+    private void displayMessages(String id){
+        //display chat list
+        recyclerView = findViewById(R.id.chatArea);
+        recyclerView.setHasFixedSize(true);
+        // Log.d("size:",String.valueOf(users.size()));
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        readMessages(this,id);
+
+    }
+
+
+
+
+    private void readMessages(Context context,String id) {
+
+        final FirebaseUser firebaseuser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
+        Query recent = reference.limitToLast(100);
+
+        recent.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(messages!=null){
+                    messages.clear();
+                }
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                    String key = snapshot.getKey();
+                    String sender = snapshot.child("sender").getValue(String.class);
+                    String receiver = snapshot.child("receiver").getValue(String.class);
+                    String message = snapshot.child("message").getValue(String.class);
+                    String time = snapshot.child("time").getValue(String.class);
+
+                    Message m = new Message(key,sender,receiver,message,time);
+
+                    if(m!=null){
+                        if((sender.equals(firebaseuser.getUid()) && receiver.equals(id))
+                        ||(sender.equals(id) && receiver.equals(firebaseuser.getUid()))){
+                            messages.add(m);
+                        }
+                    }
+
+
+                    
+                }
+
+                myAdapter = new MessageAdapter(context,messages);
+                recyclerView.setAdapter(myAdapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("err","error");
+            }
+        });
+
+    }
+
+    private void writeChatDatabase(String sender,String receiver,String message,String time){
+
+        assert firebaseuser != null;
+        String userid = firebaseuser.getUid();
+        reference = FirebaseDatabase.getInstance().getReference("Chats");
+        Log.d("entrychat","entrychat");
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("sender", sender);
+        hashMap.put("receiver", receiver );
+        hashMap.put("message", message);
+        hashMap.put("time", time);
+        //push generates unique id for each chat
+        reference.push().setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d("success","successfully added chats");
+            }
+        });
+
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
         Bundle extras = getIntent().getExtras();
         String name = extras.get("name").toString();
+        String email = extras.get("email").toString();
+        String id = extras.get("id").toString();
+        String status = extras.get("status").toString();
 
         send = findViewById(R.id.Send);
         message = findViewById(R.id.message);
@@ -48,6 +159,14 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Thread t = new Thread(){
+            public void run(){
+                displayMessages(id);
+            }
+        };
+
+        t.start();
+
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,12 +178,11 @@ public class ChatActivity extends AppCompatActivity {
                     message.setText(DEFAULT);
                 }
                 else {
-
+                    Date value = Calendar.getInstance().getTime();
+                    String time = value.toString().split(" ")[3].substring(0,5);
+                    writeChatDatabase(firebaseuser.getUid(),id,txt,time);
                      //create firebase database for storing chats
-                    //refer Message.java to get an idea
-                    new MessageView(getApplicationContext(),FirebaseAuth.getInstance()
-                            .getCurrentUser()
-                            .getDisplayName(),txt,chatArea);
+                    //populate the view by reading from database
                     message.setText("");
                     scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
 
@@ -89,4 +207,11 @@ public class ChatActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
 }

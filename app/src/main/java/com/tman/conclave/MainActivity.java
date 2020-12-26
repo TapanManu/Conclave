@@ -37,17 +37,19 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
     RecyclerView recyclerView;
     RecyclerView.Adapter myAdapter;
     RecyclerView.LayoutManager layoutManager;
-    View customView;
 
-    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = mDatabase.getReference().child("user");
+    FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
 
     public static ArrayList<User> users;
+
+    User currentuser;
 
     private void readUsers(Context context) {
 
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+
+        //the users must be ordered according to recent message they have posted -> last time field
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -68,19 +70,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
                         Log.d("ui",user.getId());
                         users.add(user);
                     }
+                    else if(user.getId().equals(firebaseUser.getUid())){
+                        currentuser = user;
+                    }
                 }
 
                 myAdapter = new UserAdapter(context, users);
                 recyclerView.setAdapter(myAdapter);
-
-                /*if (users.size() == 0) {
-                    frameLayout.setVisibility(View.VISIBLE);
-                } else {
-                    frameLayout.setVisibility(View.GONE);
-                }*/
-
-
-
 
             }
 
@@ -148,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
             //display chat users
 
                //users.add(new User("1", "dummy", "dummy@gmail.com"));
-
+            changeStatus("online",fuser);
 
             displayChatusers();
         }
@@ -176,12 +172,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
         Log.d("logged","logged in");
         if(requestCode == SIGN_IN_REQUEST_CODE) {
             if(resultCode == RESULT_OK) {
+                fuser = FirebaseAuth.getInstance().getCurrentUser();
                 writeToDataBase();
                 Toast.makeText(this,
                         "Successfully signed in. Welcome!",
                         Toast.LENGTH_LONG)
                         .show();
-                changeStatus("online");
+                changeStatus("online",fuser);
                 displayChatusers();
             } else {
                 Toast.makeText(this,
@@ -207,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_sign_out) {
+            changeStatus("offline");
             AuthUI.getInstance().signOut(this)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -215,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
                                     "You have been signed out.",
                                     Toast.LENGTH_LONG)
                                     .show();
-                            changeStatus("offline");
+
                             // Close activity
                             finish();
                         }
@@ -224,16 +222,26 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
         return true;
     }
 
+
+
     @Override
     protected void onResume() {
         super.onResume();
-        changeStatus("online");
+        if(fuser!=null)
+            changeStatus("online",fuser);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        changeStatus("offline");
+        if(fuser!=null)
+            changeStatus("offline",fuser);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
     }
 
     @Override
@@ -242,21 +250,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
         User m = users.get(index);
         Intent intent = new Intent(MainActivity.this,ChatActivity.class);
         intent.putExtra("name",m.getName());
-
-
-        //get the name and email id of other user to display the users and scrutinize based on that
-        //create two variables current user identified by firebase.AuthUI.getcurrentuser()
-        //other is other user identified by this
-        //call message view constructor by passing this info to display list of prev users
-        //better to call a somewhat modified function to display chat
-        //so it clearly implies each message should have a field representing which user has send that message
-        //then only this would be possible
-        //so start with users, make some modification necessarily
-        //create a class/field(preferred) if needed to represent the scenario
-        //each chats typed by the current user must be stored into firebase realtime database along with content,
-        //timestamp,email or userID
-        //scrutinize this as personal or public/other person's chat using this technology
-
+        intent.putExtra("id",m.getId());
+        intent.putExtra("email",m.getEmail());
+        intent.putExtra("status",m.getStatus());
 
         MainActivity.this.startActivity(intent);
         //put extras to intent based on the index selected
@@ -267,7 +263,19 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
     }
 
     private void changeStatus(String status){
-        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentuser!=null)
+            currentuser.setStatus(status);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        reference.updateChildren(hashMap);
+    }
+
+    private void changeStatus(String status,FirebaseUser fuser){
+        if(currentuser!=null)
+            currentuser.setStatus(status);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid());
 
         HashMap<String, Object> hashMap = new HashMap<>();

@@ -1,22 +1,25 @@
 package com.tman.conclave;
 
 public class Message {
+    private String id;
     private String sender;
     private String receiver;
     private String message;
     private boolean isseen;
     private String time;
 
-    public Message(String sender, String receiver, String message) {
+    public Message(String id,String sender, String receiver, String message,String time) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
         //this.isseen = isseen;
-        //this.time = time;
+        this.time = time;
     }
 
     public Message() {
     }
+
+    public String getId(){ return id; }
 
     public String getSender() {
         return sender;

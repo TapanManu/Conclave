@@ -22,6 +22,7 @@ public class User {
         this.username = username;
         this.lastmsg = "No Chats";      //by default display
         this.email = email;
+        this.status = "offline";        //default status
     }
 
    /* User(String name,String email,String url){

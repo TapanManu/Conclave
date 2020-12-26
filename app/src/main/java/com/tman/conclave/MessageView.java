@@ -20,13 +20,13 @@ public class MessageView {
 
     TextView sendmessage,recievemessage,datetime;
 
+    //read messages from firebase
 
-
-    MessageView(Context context, String username,String message,LinearLayout chatArea){
+    MessageView(Context context, String userid,String message,LinearLayout chatArea,String time){
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        String currentuser= FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        String currentuser= FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        if(username.equals(currentuser)) {               //current user
+        if(userid.equals(currentuser)) {               //current user
             Log.d("success","hi");
             sendmessage = new TextView(context);
             sendmessage.setPadding(30,10,30,10);
@@ -52,10 +52,9 @@ public class MessageView {
         }
 
         //time display
-        Date time = Calendar.getInstance().getTime();
-        String times = time.toString().split(" ")[3];
+
         datetime = new TextView(context);
-        datetime.setText(times);
+        datetime.setText(time);
         datetime.setTextColor(Color.WHITE);
         datetime.setLayoutParams(lp);
         datetime.setPadding(30,10,30,10);
