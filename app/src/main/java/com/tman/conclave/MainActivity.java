@@ -62,8 +62,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
                     String key = snapshot.getKey();
                     String username = snapshot.child("username").getValue(String.class);
                     String email = snapshot.child("email").getValue(String.class);
+                    String imageURL = snapshot.child("imageURL").getValue(String.class);
 
-                    User user = new User(key,username,email);
+                    User user = new User(key,username,email,imageURL);
 
 
                     if (user != null && user.getId() != null && firebaseUser != null && !user.getId().equals(firebaseUser.getUid())) {
@@ -116,6 +117,35 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
         });
     }
 
+    /*
+    TODO :
+    Display last chat to each user along with time
+
+    Message seen feature (add tick mark/change chat color/or any other UI feature)
+
+    Chat message delete feature, forward feature
+
+    Preloader Image for 1 second
+    display while application loads data
+
+    PROFILE SETTINGS OPTION SHOULD BE THERE (Tip:Add it to menu)
+    ALONG WITH CHANGE IN USER NAME, PHOTO URL
+    UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
+                    .setDisplayName("set new display name")
+                    .setPhotoUri(uri)
+                    .build();
+    FirebaseAuth.getInstance().getCurrentUser().updateProfile(userProfileChangeRequest);
+
+    FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+    populate this to recycler view
+
+    Add the snippet to that part for profile updation along with changes in firebase database fields
+
+    File transfer feature
+
+
+     */
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,20 +163,13 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
             );
         }
         else {
-            // User is already signed in. Therefore, display
-            // a welcome Toast
-            Toast.makeText(this,
-                    "Welcome " + FirebaseAuth.getInstance()
-                            .getCurrentUser()
-                            .getDisplayName(),
-                    Toast.LENGTH_LONG)
-                    .show();
             //display chat users
+            Thread t = new Thread(() -> {
+                changeStatus("online",fuser);
+                displayChatusers();
+            });
 
-               //users.add(new User("1", "dummy", "dummy@gmail.com"));
-            changeStatus("online",fuser);
-
-            displayChatusers();
+            t.start();
         }
     }
 
@@ -155,13 +178,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
         recyclerView = findViewById(R.id.list);
         recyclerView.setHasFixedSize(true);
 
-       // Log.d("size:",String.valueOf(users.size()));
+
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         readUsers((Context)this);
-        //Log.d("BAG",String.valueOf(users.size()));
 
     }
 

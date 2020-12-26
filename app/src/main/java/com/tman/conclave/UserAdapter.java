@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -50,22 +52,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         holder.itemView.setTag(users.get(position));
        // Log.d("namesview",users.get(position).getName());
         holder.nameview.setText(users.get(position).getName());
-        holder.prof.setImageResource(R.drawable.profile);
-        /*URL url = users.get(position).getURL();
-        final Bitmap[] bmp = new Bitmap[1];
-
-        Thread t = new Thread() {               //passing network operations on another thread
-            public void run() {
-                try {
-                    bmp[0] = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if(users.get(position).getImageURL().equals("default"))
+            holder.prof.setImageResource(R.drawable.profile);
+        else{
+            Thread t = new Thread(){
+                public void run(){
+                    holder.prof.setImageBitmap(getBitmapFromURL(users.get(position).getImageURL()));
                 }
-            }
-        };
-        t.start();
+            };
 
-        */
+            t.start();
+        }
+
     }
 
     @Override
@@ -88,6 +86,24 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                     activity.onItemClicked(users.indexOf(view.getTag()));
                 }
             });
+        }
+    }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            Log.e("src",src);
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            Log.e("Bitmap","returned");
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Exception",e.getMessage());
+            return null;
         }
     }
 }

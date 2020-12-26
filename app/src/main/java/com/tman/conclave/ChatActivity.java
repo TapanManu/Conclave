@@ -232,7 +232,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
     }
 
 }

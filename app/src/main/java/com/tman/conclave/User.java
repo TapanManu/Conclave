@@ -16,13 +16,14 @@ public class User {
 
     }
 
-    User(String id,String username,String email)  {
+    User(String id,String username,String email,String imageURL)  {
         //default image url field must be there
         this.id = id;
         this.username = username;
         this.lastmsg = "No Chats";      //by default display
         this.email = email;
         this.status = "offline";        //default status
+        this.imageURL = imageURL;
     }
 
    /* User(String name,String email,String url){
@@ -39,10 +40,13 @@ public class User {
         return email;
     }
 
+    public String getImageURL() { return imageURL; }
+
     public String getStatus() { return status; }
 
     void setStatus(String value){
         status = value;
     }
+    void setImageURL(String value){ status = value; }
 
 }
