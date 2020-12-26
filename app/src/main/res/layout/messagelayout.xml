@@ -25,18 +25,13 @@
             android:orientation="horizontal">
 
 
-
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/ivProf"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
 
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="2dp"
-                android:adjustViewBounds="true"
-                android:contentDescription="profile image"
-                android:cropToPadding="false"
-                android:background="@drawable/img" />
+                android:layout_marginTop="10dp"
+                android:src="@drawable/profile" />
 
 
             <TextView

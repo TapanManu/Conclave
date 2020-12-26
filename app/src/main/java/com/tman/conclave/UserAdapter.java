@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private ArrayList<User> users;
@@ -48,7 +50,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         holder.itemView.setTag(users.get(position));
        // Log.d("namesview",users.get(position).getName());
         holder.nameview.setText(users.get(position).getName());
-        holder.prof.setImageResource(R.drawable.ic_launcher_foreground);
+        holder.prof.setImageResource(R.drawable.profile);
         /*URL url = users.get(position).getURL();
         final Bitmap[] bmp = new Bitmap[1];
 
@@ -74,7 +76,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView nameview;
-        ImageView prof;
+        CircleImageView prof;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameview = itemView.findViewById(R.id.tvName);

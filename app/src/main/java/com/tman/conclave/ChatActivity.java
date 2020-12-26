@@ -6,7 +6,10 @@ import androidx.core.app.NavUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -101,6 +107,8 @@ public class ChatActivity extends AppCompatActivity {
                 myAdapter = new MessageAdapter(context,messages);
                 recyclerView.setAdapter(myAdapter);
 
+                scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
+
             }
 
             @Override
@@ -135,6 +143,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,15 +162,26 @@ public class ChatActivity extends AppCompatActivity {
         chatArea = findViewById(R.id.chatArea);
         chatArea.setPadding(10,5,10,5);
 
-        getSupportActionBar().setTitle(name);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.actionbar);
+        View view = getSupportActionBar().getCustomView();
+        TextView nameview = view.findViewById(R.id.nameView);
+        TextView statusview = view.findViewById(R.id.status);
+        CircleImageView profilepic = view.findViewById(R.id.image);
+        nameview.setText(name);
+        nameview.setTypeface(nameview.getTypeface(), Typeface.BOLD);
+        statusview.setText(status);
+        profilepic.setImageResource(R.drawable.profile);
+
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.ic_action_name);
+
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Thread t = new Thread(){
             public void run(){
                 displayMessages(id);
+                scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
             }
         };
 
@@ -185,6 +205,7 @@ public class ChatActivity extends AppCompatActivity {
                     //populate the view by reading from database
                     message.setText("");
                     scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
+
 
                 }
             }
