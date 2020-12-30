@@ -49,6 +49,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         if(messages==null){
             Log.d("error","hi");
         }
+        currentcontext = context;
     }
 
     @NonNull
@@ -68,49 +69,56 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         holder.itemView.setTag(messages.get(position));
         holder.messageview.setText(messages.get(position).getMessage());
         holder.timeview.setText(messages.get(position).getTime());
-
-        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN){
-                    selectedPosition=position;
-                    down = true;
-                    //Toast.makeText(currentcontext,"CLICKED", Toast.LENGTH_SHORT).show();
-                    if(getItemViewType(position) == SEND_CHAT) {
-                        if (selectedPosition == position){
-                            //holder.layoutsend.setAlpha(0.4f);
-                            holder.layoutsend.setBackgroundColor(Color.parseColor("#9de1e3"));
-                        }
+            public boolean onLongClick(View v) {
+                selectedPosition = position;
+                //Toast.makeText(currentcontext,"CLICKED", Toast.LENGTH_SHORT).show();
+                if(getItemViewType(position) == SEND_CHAT) {
+                    if (selectedPosition == position){
+                        holder.layoutsend.setBackgroundColor(Color.parseColor("#9de1e3"));
+                        down = true;
                     }
-                    if(getItemViewType(position) == RECIEVE_CHAT){
-                        if(selectedPosition == position) {
-                            //holder.layoutreceive.setAlpha(0.4f);
-                            holder.layoutreceive.setBackgroundColor(Color.parseColor("#9de1e3"));
-                        }
-                    }
-                    return true;
                 }
-                else if(event.getAction() == MotionEvent.ACTION_UP){
-                    if(getItemViewType(position) == SEND_CHAT) {
-                        if (selectedPosition == position){
-                            //holder.layoutsend.setAlpha(0);
-                            holder.layoutsend.setBackgroundColor(Color.parseColor("#00ffffff"));
-
-                        }
+                if(getItemViewType(position) == RECIEVE_CHAT){
+                    if(selectedPosition == position) {
+                        holder.layoutreceive.setBackgroundColor(Color.parseColor("#9de1e3"));
+                        down = true;
                     }
-                    if(getItemViewType(position) == RECIEVE_CHAT){
-                        if(selectedPosition == position) {
-                            //holder.layoutreceive.setAlpha(0.4f);
-                            holder.layoutreceive.setBackgroundColor(Color.parseColor("#00ffffff"));
-
-                        }
-                    }
-                    return false;
                 }
 
-                return false;
+                return true;
             }
+        });
 
+        holder.itemView.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                selectedPosition = position;
+                if(down==true) {
+                    if (getItemViewType(position) == SEND_CHAT) {
+                        if (selectedPosition == position) {
+                            holder.layoutsend.setBackgroundColor(Color.parseColor("#00ffffff"));
+                            down = false;
+                        }
+                        else{
+                            holder.layoutsend.setBackgroundColor(Color.parseColor("#9de1e3"));
+                            down = true;
+                        }
+                    }
+                    if (getItemViewType(position) == RECIEVE_CHAT) {
+                        if (selectedPosition == position) {
+                            holder.layoutreceive.setBackgroundColor(Color.parseColor("#00ffffff"));
+                            down = false;
+                        }
+                        else{
+                            holder.layoutreceive.setBackgroundColor(Color.parseColor("#9de1e3"));
+                            down = true;
+                        }
+                    }
+                }
+            }
         });
 
 
