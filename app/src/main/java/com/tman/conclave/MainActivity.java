@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
                     String imageURL = snapshot.child("imageURL").getValue(String.class);
 
                     User user = new User(key,username,email,imageURL);
+                    user.setLastmsg(Conclave.lastchat);
+                    user.setLasttime(Conclave.lasttime);
 
 
                     if (user != null && user.getId() != null && firebaseUser != null && !user.getId().equals(firebaseUser.getUid())) {

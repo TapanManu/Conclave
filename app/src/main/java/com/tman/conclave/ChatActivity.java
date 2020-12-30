@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -100,8 +101,8 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     }
 
-
-                    
+                    Conclave.lastchat = message;
+                    Conclave.lasttime = time;
                 }
 
                 myAdapter = new MessageAdapter(context,messages);
@@ -235,4 +236,13 @@ public class ChatActivity extends AppCompatActivity {
         scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 }

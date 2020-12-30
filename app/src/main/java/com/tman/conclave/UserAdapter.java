@@ -63,7 +63,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
             t.start();
         }
+        String chatm = users.get(position).getLastmsg();
+        if(chatm.length()>20){
+            holder.chat.setText(chatm.substring(0,20)+"...");
+        }
+        else{
+            holder.chat.setText(chatm);
+        }
 
+        String t = users.get(position).getLasttime();
+        if(t!=null)
+            holder.time.setText(t);
     }
 
     @Override
@@ -75,10 +85,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         TextView nameview;
         CircleImageView prof;
+        TextView chat;
+        TextView time;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameview = itemView.findViewById(R.id.tvName);
             prof = itemView.findViewById(R.id.ivProf);
+            chat = itemView.findViewById(R.id.lastchat);
+            time = itemView.findViewById(R.id.time);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

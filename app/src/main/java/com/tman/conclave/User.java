@@ -44,9 +44,22 @@ public class User {
 
     public String getStatus() { return status; }
 
-    void setStatus(String value){
+    public void setStatus(String value){
         status = value;
     }
-    void setImageURL(String value){ status = value; }
+    public void setImageURL(String value){ status = value; }
+
+    public void setLastmsg(String msg){
+        lastmsg = msg;
+    }
+
+    public void setLasttime(String time){
+        lasttime = time;
+    }
+
+    public String getLastmsg(){ return lastmsg; }
+    public String getLasttime(){ return lasttime; }
+
+
 
 }
