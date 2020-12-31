@@ -98,17 +98,21 @@ public class ChatActivity extends AppCompatActivity {
                         if((sender.equals(firebaseuser.getUid()) && receiver.equals(id))
                         ||(sender.equals(id) && receiver.equals(firebaseuser.getUid()))){
                             messages.add(m);
+                            if(sender.equals(id))
+                                updateLastMessage(sender,m.getMessage(),m.getTime());
+                            else
+                                updateLastMessage(receiver,m.getMessage(),m.getTime());
                         }
                     }
 
-                    Conclave.lastchat = message;
-                    Conclave.lasttime = time;
+
+
                 }
 
                 myAdapter = new MessageAdapter(context,messages);
                 recyclerView.setAdapter(myAdapter);
 
-                scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
+
 
             }
 
@@ -244,5 +248,14 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    private void updateLastMessage(String userid,String message,String time){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("lastmsg", message);
+        hashMap.put("lasttime",time);
+        reference.updateChildren(hashMap);
     }
 }

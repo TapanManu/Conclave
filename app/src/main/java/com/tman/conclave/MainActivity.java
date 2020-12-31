@@ -63,10 +63,12 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
                     String username = snapshot.child("username").getValue(String.class);
                     String email = snapshot.child("email").getValue(String.class);
                     String imageURL = snapshot.child("imageURL").getValue(String.class);
+                    String lastmsg = snapshot.child("lastmsg").getValue(String.class);
+                    String lasttime = snapshot.child("lasttime").getValue(String.class);
 
                     User user = new User(key,username,email,imageURL);
-                    user.setLastmsg(Conclave.lastchat);
-                    user.setLasttime(Conclave.lasttime);
+                    user.setLastmsg(lastmsg);
+                    user.setLasttime(lasttime);
 
 
                     if (user != null && user.getId() != null && firebaseUser != null && !user.getId().equals(firebaseUser.getUid())) {
@@ -106,8 +108,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
         hashMap.put("imageURL", "default");
         hashMap.put("status", "offline");
         hashMap.put("email",firebaseUser.getEmail());
-        /*hashMap.put("bio", "");
-        hashMap.put("search", username.toLowerCase());
+        hashMap.put("lastmsg", "no chat done");
+        hashMap.put("lasttime","time");
+        /*hashMap.put("search", username.toLowerCase());
         if(dialog!=null){
             dialog.dismiss();
         }*/
@@ -307,6 +310,8 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
 
         reference.updateChildren(hashMap);
     }
+
+
 
 
     }

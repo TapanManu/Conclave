@@ -11,8 +11,10 @@ import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -121,6 +123,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
         });
 
+        ScrollView scrollView;
+        // = holder.itemView.findViewById(R.id.scrollView);
+        //scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
 
     }
 
@@ -157,4 +162,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             layoutreceive = itemView.findViewById(R.id.receive);
             }
         }
+
+
     }
