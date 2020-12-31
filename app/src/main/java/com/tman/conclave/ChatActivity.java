@@ -60,10 +60,13 @@ public class ChatActivity extends AppCompatActivity {
         //display chat list
         recyclerView = findViewById(R.id.chatArea);
         recyclerView.setHasFixedSize(true);
+        //recyclerView.scrollToPosition(messages.size()-1);
         // Log.d("size:",String.valueOf(users.size()));
 
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatActivity.this);
+
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         readMessages(this, id);
 

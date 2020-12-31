@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
         recyclerView.setHasFixedSize(true);
 
 
-
+        //linearLayoutManager.setSmoothScrollbarEnabled(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
