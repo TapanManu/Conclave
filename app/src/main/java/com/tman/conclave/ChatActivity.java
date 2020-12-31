@@ -43,7 +43,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatActivity extends AppCompatActivity {
 
     EditText message;
-    ImageButton send,delete;
+    ImageButton send, delete;
     ScrollView scrollView;
     String txt;
     RecyclerView chatArea;
@@ -56,7 +56,7 @@ public class ChatActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     public static ArrayList<Message> messages = new ArrayList<>();
 
-    private void displayMessages(String id){
+    private void displayMessages(String id) {
         //display chat list
         recyclerView = findViewById(R.id.chatArea);
         recyclerView.setHasFixedSize(true);
@@ -65,14 +65,12 @@ public class ChatActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        readMessages(this,id);
+        readMessages(this, id);
 
     }
 
 
-
-
-    private void readMessages(Context context,String id) {
+    private void readMessages(Context context, String id) {
 
         final FirebaseUser firebaseuser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
@@ -81,7 +79,7 @@ public class ChatActivity extends AppCompatActivity {
         recent.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(messages!=null){
+                if (messages != null) {
                     messages.clear();
                 }
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -92,60 +90,53 @@ public class ChatActivity extends AppCompatActivity {
                     String message = snapshot.child("message").getValue(String.class);
                     String time = snapshot.child("time").getValue(String.class);
 
-                    Message m = new Message(key,sender,receiver,message,time);
+                    Message m = new Message(key, sender, receiver, message, time);
 
-                    if(m!=null){
-                        if((sender.equals(firebaseuser.getUid()) && receiver.equals(id))
-                        ||(sender.equals(id) && receiver.equals(firebaseuser.getUid()))){
+                    if (m != null) {
+                        if ((sender.equals(firebaseuser.getUid()) && receiver.equals(id))
+                                || (sender.equals(id) && receiver.equals(firebaseuser.getUid()))) {
                             messages.add(m);
-                            if(sender.equals(id))
-                                updateLastMessage(sender,m.getMessage(),m.getTime());
-                            else
-                                updateLastMessage(receiver,m.getMessage(),m.getTime());
                         }
                     }
 
 
-
                 }
 
-                myAdapter = new MessageAdapter(context,messages);
+                myAdapter = new MessageAdapter(context, messages);
                 recyclerView.setAdapter(myAdapter);
-
 
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("err","error");
+                Log.d("err", "error");
             }
         });
 
     }
 
-    private void writeChatDatabase(String sender,String receiver,String message,String time){
+    private void writeChatDatabase(String sender, String receiver, String message, String time) {
 
         assert firebaseuser != null;
         String userid = firebaseuser.getUid();
         reference = FirebaseDatabase.getInstance().getReference("Chats");
-        Log.d("entrychat","entrychat");
+        Log.d("entrychat", "entrychat");
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("sender", sender);
-        hashMap.put("receiver", receiver );
+        hashMap.put("receiver", receiver);
         hashMap.put("message", message);
         hashMap.put("time", time);
         //push generates unique id for each chat
         reference.push().setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Log.d("success","successfully added chats");
+                Log.d("success", "successfully added chats");
             }
         });
 
     }
-
 
 
     @SuppressLint("WrongConstant")
@@ -165,7 +156,7 @@ public class ChatActivity extends AppCompatActivity {
         delete = findViewById(R.id.delete);
         scrollView = findViewById(R.id.scrollView);
         chatArea = findViewById(R.id.chatArea);
-        chatArea.setPadding(10,5,10,5);
+        chatArea.setPadding(10, 5, 10, 5);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar);
@@ -183,8 +174,8 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Thread t = new Thread(){
-            public void run(){
+        Thread t = new Thread() {
+            public void run() {
                 displayMessages(id);
                 scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
             }
@@ -197,16 +188,15 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 txt = message.getText().toString().trim();
-                Log.d("emsg",txt);
-                if(txt.equals("") || txt.equals(DEFAULT)){
-                    Toast.makeText(getApplicationContext(),"Enter some text",Toast.LENGTH_SHORT).show();
+                Log.d("emsg", txt);
+                if (txt.equals("") || txt.equals(DEFAULT)) {
+                    Toast.makeText(getApplicationContext(), "Enter some text", Toast.LENGTH_SHORT).show();
                     message.setText(DEFAULT);
-                }
-                else {
+                } else {
                     Date value = Calendar.getInstance().getTime();
-                    String time = value.toString().split(" ")[3].substring(0,5);
-                    writeChatDatabase(firebaseuser.getUid(),id,txt,time);
-                     //create firebase database for storing chats
+                    String time = value.toString().split(" ")[3].substring(0, 5);
+                    writeChatDatabase(firebaseuser.getUid(), id, txt, time);
+                    //create firebase database for storing chats
                     //populate the view by reading from database
                     message.setText("");
                     scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
@@ -250,12 +240,6 @@ public class ChatActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private void updateLastMessage(String userid,String message,String time){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("lastmsg", message);
-        hashMap.put("lasttime",time);
-        reference.updateChildren(hashMap);
-    }
 }
+

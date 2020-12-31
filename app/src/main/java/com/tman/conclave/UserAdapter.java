@@ -14,6 +14,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -26,6 +34,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private ArrayList<User> users;
     ItemClicked activity;
+    String LastMessage,Lasttime;
 
     public interface ItemClicked{
         void onItemClicked(int index);
@@ -63,17 +72,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
             t.start();
         }
-        String chatm = users.get(position).getLastmsg();
-        if(chatm.length()>20){
-            holder.chat.setText(chatm.substring(0,20)+"...");
-        }
-        else{
-            holder.chat.setText(chatm);
-        }
-
-        String t = users.get(position).getLasttime();
-        if(t!=null)
-            holder.time.setText(t);
+        String userid = users.get(position).getId();
+        lastMessage(userid,holder.chat,holder.time);
     }
 
     @Override
@@ -119,5 +119,57 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             Log.e("Exception",e.getMessage());
             return null;
         }
+    }
+
+    private void lastMessage(final String userid, final TextView last_msg, final TextView last_time) {
+        LastMessage = "default";
+        Lasttime = "";
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String sender = snapshot.child("sender").getValue(String.class);
+                    String receiver = snapshot.child("receiver").getValue(String.class);
+                    String message = snapshot.child("message").getValue(String.class);
+                    String time = snapshot.child("time").getValue(String.class);
+
+                    if (firebaseUser != null && message != null) {
+                        if (receiver.equals(firebaseUser.getUid()) && sender.equals(userid) ||
+                                receiver.equals(userid) && sender.equals(firebaseUser.getUid())) {
+                            LastMessage = message;
+                            Lasttime = time;
+                        }
+                    }
+                }
+
+                switch (LastMessage) {
+                    case "default":
+                        last_msg.setText("No Message");
+                        last_time.setText("");
+                        break;
+
+                    default:
+                        if(LastMessage.length()>30){
+                            last_msg.setText(LastMessage.substring(0,30)+"...");
+                        }
+                        else{
+                            last_msg.setText(LastMessage);
+                        }
+                        last_time.setText(Lasttime);
+                        break;
+                }
+
+                LastMessage = "default";
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
     }
 }
