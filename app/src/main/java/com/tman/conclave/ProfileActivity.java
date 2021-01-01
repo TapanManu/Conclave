@@ -38,6 +38,10 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        //Use glide to load images from web
+        //from phone, start an implicit activity
+        //https://stackoverflow.com/questions/62530852/how-to-display-pictures-from-phone-in-cards-in-android-studio-like-whatsapp-doe
+
         UserName = findViewById(R.id.username);
         disp = findViewById(R.id.disp);
         cprof = findViewById(R.id.userprof);
