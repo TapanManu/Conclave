@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
 
     /*
     TODO :
-    Display last chat to each user along with time
 
     Message seen feature (add tick mark/change chat color/or any other UI feature)
 
@@ -224,6 +223,10 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.profile_menu) {
+            Intent i = new Intent(MainActivity.this,ProfileActivity.class);
+            MainActivity.this.startActivity(i);
+        }
         if(item.getItemId() == R.id.menu_sign_out) {
             changeStatus("offline");
             AuthUI.getInstance().signOut(this)
