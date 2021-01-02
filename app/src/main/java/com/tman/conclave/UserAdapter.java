@@ -66,7 +66,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         else{
             Thread t = new Thread(){
                 public void run(){
-                    holder.prof.setImageBitmap(getBitmapFromURL(users.get(position).getImageURL()));
+                    holder.prof.setImageBitmap(getBitmapFromURL(users.get(position).getImageURL().toString()));
                 }
             };
 

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
                     String email = snapshot.child("email").getValue(String.class);
                     String imageURL = snapshot.child("imageURL").getValue(String.class);
 
-                    User user = new User(key,username,email,imageURL);
+                    User user = new User(key,username,email,Uri.parse(imageURL));
 
 
                     if (user != null && user.getId() != null && firebaseUser != null && !user.getId().equals(firebaseUser.getUid())) {
@@ -123,10 +124,6 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
 
     Chat message delete feature, forward feature
 
-    Preloader Image for 1 second
-    display while application loads data
-
-    PROFILE SETTINGS OPTION SHOULD BE THERE (Tip:Add it to menu)
     ALONG WITH CHANGE IN USER NAME, PHOTO URL
     UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
                     .setDisplayName("set new display name")
@@ -225,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.profile_menu) {
             Intent i = new Intent(MainActivity.this,ProfileActivity.class);
+            i.putExtra("image",currentuser.getImageURL());
             MainActivity.this.startActivity(i);
         }
         if(item.getItemId() == R.id.menu_sign_out) {

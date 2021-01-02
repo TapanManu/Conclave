@@ -1,5 +1,7 @@
 package com.tman.conclave;
 
+import android.net.Uri;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -7,7 +9,7 @@ public class User {
     private String id;
     private String username;
     private String email;
-    private String imageURL;
+    private Uri imageURL;
     private String status;
     private String lastmsg;
     private String lasttime;
@@ -16,7 +18,7 @@ public class User {
 
     }
 
-    User(String id,String username,String email,String imageURL)  {
+    User(String id,String username,String email,Uri imageURL)  {
         //default image url field must be there
         this.id = id;
         this.username = username;
@@ -40,14 +42,14 @@ public class User {
         return email;
     }
 
-    public String getImageURL() { return imageURL; }
+    public Uri getImageURL() { return imageURL; }
 
     public String getStatus() { return status; }
 
     public void setStatus(String value){
         status = value;
     }
-    public void setImageURL(String value){ status = value; }
+    public void setImageURL(Uri value){ imageURL = value; }
 
     public void setLastmsg(String msg){
         lastmsg = msg;
