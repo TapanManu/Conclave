@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
                     }
                 }
 
-                myAdapter = new UserAdapter(context, users);
+                myAdapter = new UserAdapter(getApplicationContext(),context, users);
                 recyclerView.setAdapter(myAdapter);
 
             }

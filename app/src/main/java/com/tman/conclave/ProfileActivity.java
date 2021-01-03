@@ -84,7 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
             cprof.setImageResource(R.drawable.profile);
         }
         else {
-            Log.d("TAG",firebaseUser.getPhotoUrl().toString());
+            //Log.d("TAG",firebaseUser.getPhotoUrl().toString());
             Glide.with(getApplicationContext())
                     .load(image)
                     .into(cprof);
