@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,10 +31,13 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
+
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private ArrayList<User> users;
     ItemClicked activity;
+    Context context;
     String LastMessage,Lasttime;
 
     public interface ItemClicked{
@@ -46,6 +50,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             Log.d("error","hi");
         }
         this.activity = (ItemClicked) context;
+        this.context = context;
     }
 
     @NonNull
@@ -64,13 +69,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         if(users.get(position).getImageURL().equals("default"))
             holder.prof.setImageResource(R.drawable.profile);
         else{
-            Thread t = new Thread(){
-                public void run(){
-                    holder.prof.setImageBitmap(getBitmapFromURL(users.get(position).getImageURL().toString()));
-                }
-            };
-
-            t.start();
+                    Glide.with(context)
+                            .load(users.get(position).getImageURL())
+                            .into(holder.prof);
         }
         String userid = users.get(position).getId();
         lastMessage(userid,holder.chat,holder.time);

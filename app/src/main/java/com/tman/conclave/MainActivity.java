@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("id", userid);
         hashMap.put("username",firebaseUser.getDisplayName() );
-        hashMap.put("imageURL", "default");
+        hashMap.put("imageURL","default");
         hashMap.put("status", "offline");
         hashMap.put("email",firebaseUser.getEmail());
         /*hashMap.put("search", username.toLowerCase());
@@ -187,10 +187,11 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
                                     Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("logged","logged in");
+
         if(requestCode == SIGN_IN_REQUEST_CODE) {
             if(resultCode == RESULT_OK) {
                 fuser = FirebaseAuth.getInstance().getCurrentUser();
-                writeToDataBase();
+                checkUser();
                 Toast.makeText(this,
                         "Successfully signed in. Welcome!",
                         Toast.LENGTH_LONG)
@@ -222,6 +223,9 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.profile_menu) {
             Intent i = new Intent(MainActivity.this,ProfileActivity.class);
+            String imageUri = currentuser.getImageURL().toString();
+            Log.d("url",imageUri);
+
             i.putExtra("image",currentuser.getImageURL());
             MainActivity.this.startActivity(i);
         }
@@ -304,6 +308,25 @@ public class MainActivity extends AppCompatActivity implements UserAdapter.ItemC
         hashMap.put("status", status);
 
         reference.updateChildren(hashMap);
+    }
+
+    private void checkUser(){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+
+        ref.child(fuser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    return;
+                } else {
+                    writeToDataBase();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("tag","database error");
+            }
+        });
     }
 
 
